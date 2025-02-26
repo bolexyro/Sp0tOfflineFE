@@ -4,20 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:spotoffline/constants.dart';
 import 'package:spotoffline/models/tokens.dart';
 import 'package:spotoffline/models/user.dart';
-import 'package:spotoffline/providers/user_provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SpotifyWebViewScreen extends ConsumerStatefulWidget {
+class SpotifyWebViewScreen extends StatefulWidget {
   const SpotifyWebViewScreen({super.key});
 
   @override
-  ConsumerState<SpotifyWebViewScreen> createState() =>
+  State<SpotifyWebViewScreen> createState() =>
       _SpotifyWebViewScreenState();
 }
 
-class _SpotifyWebViewScreenState extends ConsumerState<SpotifyWebViewScreen> {
+class _SpotifyWebViewScreenState extends State<SpotifyWebViewScreen> {
   final _channel = WebSocketChannel.connect(
     Uri.parse(ApiEndpoints.tokenWebsocket),
   );
@@ -57,17 +55,17 @@ class _SpotifyWebViewScreenState extends ConsumerState<SpotifyWebViewScreen> {
         if (!json.containsKey('user')) {
           throw const FormatException();
         }
-        ref.read(userDataProvider.notifier).updateUserData(
-              User(
-                name: json['user']['display_name'],
-                images: List<String>.from(json['user']['images']),
-                email: json['user']['email'],
-                id: json['user']['id'],
-                tokens: Tokens(json['token_data']['access_token'],
-                    json['token_data']['access_token']),
-              ),
-            );
-        Navigator.of(context).pop(true);
+        
+        Navigator.of(context).pop(
+          User(
+            name: json['user']['display_name'],
+            images: List<String>.from(json['user']['images']),
+            email: json['user']['email'],
+            id: json['user']['id'],
+            tokens: Tokens(json['token_data']['access_token'],
+                json['token_data']['access_token']),
+          ),
+        );
       } catch (e) {
         Navigator.of(context).pop();
       }
