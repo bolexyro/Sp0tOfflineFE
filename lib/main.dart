@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotoffline/screens/login_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'SpotOffline',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(    
+        colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 5, 71, 7),
           brightness: Brightness.dark,
         ),

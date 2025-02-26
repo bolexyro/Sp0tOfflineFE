@@ -1,7 +1,8 @@
 class AppConstants {}
 
 class ApiEndpoints {
-  static const baseUrl = 'http://172.16.180.66:8000';
+  static const subDomain = 'lively-helpful-monarch.ngrok-free.app';
+  static const baseUrl = 'https://$subDomain';
   static const login = '$baseUrl/login';
-  static const tokenWebsocket = 'ws://172.16.180.66:8000/ws/token';
+  static const tokenWebsocket = 'wss://$subDomain/ws/token';
 }

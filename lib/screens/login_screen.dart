@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotoffline/screens/home_screen.dart';
 import 'package:spotoffline/screens/spotify_web_view_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,7 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +21,17 @@ class _LoginScreenState extends State<LoginScreen> {
           Center(
             child: ElevatedButton(
               onPressed: () async {
-                setState(() {
-                  // _isLoading = true;
-                });
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const SpotifyWebViewScreen()));
+                final isAuthenticated = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const SpotifyWebViewScreen()));
+                if (isAuthenticated == true) {
+                  if (context.mounted) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()),
+                        (route) => false);
+                  }
+                }
               },
               child: _isLoading
                   ? const SizedBox.square(
