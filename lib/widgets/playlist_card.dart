@@ -19,13 +19,20 @@ class PlaylistCard extends StatelessWidget {
           cursor: SystemMouseCursors.click,
           child: InkWell(
             onTap: onTap,
-            borderRadius: BorderRadius.circular(20),
             splashColor: Colors.green.withOpacity(0.3),
             child: Container(
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.surfaceContainer,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 94, 23, 209),
+                                        Color.fromARGB(255, 192, 165, 236),
+
+                  ],
+                ),
+                // color: Theme.of(context).colorScheme.surfaceContainer,
               ),
               child: Text(text),
             ),

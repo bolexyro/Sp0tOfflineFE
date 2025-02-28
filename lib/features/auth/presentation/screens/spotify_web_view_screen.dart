@@ -1,23 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotoffline/constants.dart';
-import 'package:spotoffline/models/tokens.dart';
-import 'package:spotoffline/models/user.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:spotoffline/features/auth/presentation/providers/auth_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class SpotifyWebViewScreen extends StatefulWidget {
+class SpotifyWebViewScreen extends ConsumerStatefulWidget {
   const SpotifyWebViewScreen({super.key});
 
   @override
-  State<SpotifyWebViewScreen> createState() => _SpotifyWebViewScreenState();
+  ConsumerState<SpotifyWebViewScreen> createState() =>
+      _SpotifyWebViewScreenState();
 }
 
-class _SpotifyWebViewScreenState extends State<SpotifyWebViewScreen> {
-  final _channel = WebSocketChannel.connect(
-    Uri.parse(ApiEndpoints.tokenWebsocket),
-  );
+class _SpotifyWebViewScreenState extends ConsumerState<SpotifyWebViewScreen> {
 
   double loadProgress = 0;
   bool isLoading = false;
@@ -48,36 +43,16 @@ class _SpotifyWebViewScreenState extends State<SpotifyWebViewScreen> {
     )
     ..loadRequest(Uri.parse(ApiEndpoints.login));
 
-  @override
-  void initState() {
-    super.initState();
-    _channel.stream.listen((data) {
-      try {
-        final json = jsonDecode(data);
-        if (!json.containsKey('user')) {
-          throw const FormatException();
-        }
-
-        Navigator.of(context).pop(
-          User(
-            name: json['user']['display_name'],
-            images: List<String>.from(json['user']['images']),
-            email: json['user']['email'],
-            id: json['user']['id'],
-            tokens: Tokens(json['token_data']['access_token'],
-                json['token_data']['access_token']),
-          ),
-        );
-      } catch (e) {
-        Navigator.of(context).pop();
-      }
-    });
+  Future<void> waitForWebsocketSuccess() async {
+    final dataState =
+        await ref.read(authProvider.notifier).listenForAuthSuccess();
+    if (context.mounted) Navigator.of(context).pop(dataState);
   }
 
   @override
-  dispose() {
-    _channel.sink.close();
-    super.dispose();
+  void initState() {
+    super.initState();
+    waitForWebsocketSuccess();
   }
 
   @override
@@ -108,7 +83,8 @@ class _SpotifyWebViewScreenState extends State<SpotifyWebViewScreen> {
         ],
       ),
       body: Column(children: [
-      if (isLoading)  LinearProgressIndicator(value: loadProgress, color: Colors.green),
+        if (isLoading)
+          LinearProgressIndicator(value: loadProgress, color: Colors.green),
         Expanded(
           child: WebViewWidget(
             controller: controller,
