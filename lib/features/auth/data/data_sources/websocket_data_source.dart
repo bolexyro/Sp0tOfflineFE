@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:spotoffline/constants.dart';
+import 'package:spotoffline/core/constants.dart';
 import 'package:spotoffline/core/data_state.dart';
 import 'package:spotoffline/features/auth/data/models/auth_data_model.dart';
-import 'package:spotoffline/features/auth/data/models/token_model.dart';
-import 'package:spotoffline/features/auth/data/models/user_model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WebsocketDataSource {
@@ -20,13 +18,10 @@ class WebsocketDataSource {
         throw const FormatException();
       }
 
-      return DataSuccess(AuthDataModel(
-          user: UserModel.fromJson(json['user']),
-          token: TokenModel.fromJson(json['token_data'])));
+      return DataSuccess(AuthDataModel.fromJson(json));
     } catch (e) {
-      return const DataException('An error occured');
-    }
-    finally {
+      return DataException('An error occured: $e');
+    } finally {
       channel.sink.close();
     }
   }

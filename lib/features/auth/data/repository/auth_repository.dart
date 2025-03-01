@@ -14,7 +14,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<DataState<AuthData>> listenForAuthSuccess() async {
     final dataState = await websocketDataSource.listenForAuthSuccess();
-
+    print(dataState);
     if (dataState is DataSuccess) {
       await localDataSource.saveAuthData(dataState.data!);
       return DataSuccess(dataState.data!.toEntity());
@@ -23,14 +23,22 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<void> logout() async {
+    await localDataSource.deleteAuthData();
   }
 
   @override
   Future<void> refreshToken() {
     // TODO: implement refreshToken
     throw UnimplementedError();
+  }
+
+  @override
+  DataState<AuthData> loadAuthData() {
+    final authData = localDataSource.getAuthData();
+    if (authData == null) {
+      return const DataException('No auth data found');
+    }
+    return DataSuccess(authData.toEntity());
   }
 }

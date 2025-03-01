@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spotoffline/features/auth/presentation/providers/auth_provider.dart';
 import 'package:spotoffline/providers/liked_songs_provider.dart';
-import 'package:spotoffline/providers/user_provider.dart';
 import 'package:spotoffline/widgets/track_card.dart';
 
 class LikedSongsScreen extends ConsumerStatefulWidget {
@@ -17,7 +17,7 @@ class _LikedSongsScreenState extends ConsumerState<LikedSongsScreen> {
   Future<void> getLikedSongs() async {
     await ref
         .read(likedSongsProvider.notifier)
-        .getLikedSongs(ref.read(userDataProvider).tokens.accessToken);
+        .getLikedSongs(ref.read(authProvider)!.token.accessToken);
   }
 
   @override

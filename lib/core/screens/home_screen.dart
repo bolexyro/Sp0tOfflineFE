@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotoffline/screens/liked_songs_screen.dart';
 import 'package:spotoffline/widgets/playlist_card.dart';
-import 'package:spotoffline/widgets/profile_circle_avatar.dart';
+import 'package:spotoffline/core/widgets/profile_circle_avatar.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

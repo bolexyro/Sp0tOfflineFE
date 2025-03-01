@@ -9,7 +9,7 @@ class TokenModel {
   final String refreshToken;
 
   factory TokenModel.fromJson(Map<String, dynamic> json) =>
-      _$TokenFromJson(json);
+      _$TokenModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TokenToJson(this);
+  Map<String, dynamic> toJson() => _$TokenModelToJson(this);
 }

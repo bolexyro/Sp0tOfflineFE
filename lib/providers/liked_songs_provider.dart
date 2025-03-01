@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotoffline/constants.dart';
+import 'package:spotoffline/core/constants.dart';
 import 'package:spotoffline/models/spotify_models.dart';
 
 class LikedSongsNotifier extends StateNotifier<List<Track>> {

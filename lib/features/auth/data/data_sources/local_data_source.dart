@@ -36,4 +36,13 @@ class LocalDataSource {
         user: UserModel(id: id, name: name, images: images, email: email),
         token: TokenModel(accessToken, refreshToken));
   }
+
+  Future<void> deleteAuthData() async {
+    await prefsWithCache.remove('name');
+    await prefsWithCache.remove('images');
+    await prefsWithCache.remove('email');
+    await prefsWithCache.remove('id');
+    await prefsWithCache.remove('accessToken');
+    await prefsWithCache.remove('refreshToken');
+  }
 }
