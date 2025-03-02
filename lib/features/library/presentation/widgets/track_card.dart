@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotoffline/models/spotify_models.dart';
-
+import 'package:spotoffline/features/library/domain/entity/track.dart';
 class TrackCard extends StatelessWidget {
   const TrackCard({super.key, required this.track});
 

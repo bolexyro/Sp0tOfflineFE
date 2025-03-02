@@ -1,5 +1,6 @@
+import 'package:spotoffline/core/data_state.dart';
+import 'package:spotoffline/features/library/domain/entity/track.dart';
+
 abstract class LibraryRepository {
-  Future<void> getLikedSongs();
-  Future<void> getAlbums();
-  Future<void> getPlaylists();
+  Future<DataState<List<Track>>> getLibrary();
 }

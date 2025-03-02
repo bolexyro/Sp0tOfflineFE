@@ -5,7 +5,7 @@ import 'package:spotoffline/features/auth/domain/entity/auth_data.dart';
 import 'package:spotoffline/features/auth/domain/usecases/listen_for_auth_success.dart';
 import 'package:spotoffline/features/auth/domain/usecases/load_auth_data.dart';
 import 'package:spotoffline/features/auth/domain/usecases/logout.dart';
-import 'package:spotoffline/service_locator.dart';
+import 'package:spotoffline/core/di/service_locator.dart';
 
 class AuthNotifier extends StateNotifier<AuthData?> {
   AuthNotifier(

@@ -1,8 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spotoffline/core/auth/token_manager.dart';
+import 'package:spotoffline/core/network/dio_client.dart';
 import 'package:spotoffline/features/auth/data/data_sources/local_data_source.dart';
 import 'package:spotoffline/features/auth/data/data_sources/websocket_data_source.dart';
 import 'package:spotoffline/features/auth/data/repository/auth_repository.dart';
+import 'package:spotoffline/features/library/data/data_source/remote_data_source.dart';
+import 'package:spotoffline/features/library/data/repository/library_repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -15,4 +19,11 @@ Future<void> setupLocator() async {
 
   getIt.registerSingleton<AuthRepositoryImpl>(AuthRepositoryImpl(
       const WebsocketDataSource(), LocalDataSource(prefsWithCache)));
+
+  getIt.registerSingleton<TokenManager>(
+      TokenManager(accessToken: 'accessToken', refreshToken: 'refreshToken'));
+  getIt.registerLazySingleton<DioClient>(() => DioClient());
+
+  getIt.registerSingleton<LibraryRepositoryImpl>(
+      LibraryRepositoryImpl(RemoteDataSource(getIt<DioClient>().dio)));
 }

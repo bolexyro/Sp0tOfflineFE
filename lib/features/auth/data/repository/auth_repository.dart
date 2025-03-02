@@ -1,4 +1,6 @@
+import 'package:spotoffline/core/auth/token_manager.dart';
 import 'package:spotoffline/core/data_state.dart';
+import 'package:spotoffline/core/di/service_locator.dart';
 import 'package:spotoffline/core/extensions.dart';
 import 'package:spotoffline/features/auth/data/data_sources/local_data_source.dart';
 import 'package:spotoffline/features/auth/data/data_sources/websocket_data_source.dart';
@@ -14,9 +16,12 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<DataState<AuthData>> listenForAuthSuccess() async {
     final dataState = await websocketDataSource.listenForAuthSuccess();
-    print(dataState);
     if (dataState is DataSuccess) {
-      await localDataSource.saveAuthData(dataState.data!);
+      final authData = dataState.data!;
+      await localDataSource.saveAuthData(authData);
+      getIt<TokenManager>().accessToken = authData.token.accessToken;
+      getIt<TokenManager>().refreshToken = authData.token.refreshToken;
+
       return DataSuccess(dataState.data!.toEntity());
     }
     return DataException(dataState.exceptionMessage!);
@@ -39,6 +44,8 @@ class AuthRepositoryImpl implements AuthRepository {
     if (authData == null) {
       return const DataException('No auth data found');
     }
+    getIt<TokenManager>().accessToken = authData.token.accessToken;
+    getIt<TokenManager>().refreshToken = authData.token.refreshToken;
     return DataSuccess(authData.toEntity());
   }
 }

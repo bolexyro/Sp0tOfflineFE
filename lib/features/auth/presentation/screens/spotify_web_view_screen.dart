@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotoffline/core/constants.dart';
+import 'package:spotoffline/core/network/api_endpoints.dart';
 import 'package:spotoffline/features/auth/presentation/providers/auth_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

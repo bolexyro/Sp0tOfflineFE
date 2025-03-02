@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:spotoffline/core/constants.dart';
 import 'package:spotoffline/core/data_state.dart';
+import 'package:spotoffline/core/network/api_endpoints.dart';
 import 'package:spotoffline/features/auth/data/models/auth_data_model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -9,10 +9,11 @@ class WebsocketDataSource {
   const WebsocketDataSource();
 
   Future<DataState<AuthDataModel>> listenForAuthSuccess() async {
-    final channel =
-        WebSocketChannel.connect(Uri.parse(ApiEndpoints.tokenWebsocket));
-    final data = await channel.stream.first;
+    late WebSocketChannel channel;
     try {
+      channel =
+          WebSocketChannel.connect(Uri.parse(ApiEndpoints.tokenWebsocket));
+      final data = await channel.stream.first;
       final json = jsonDecode(data);
       if (!json.containsKey('user')) {
         throw const FormatException();

@@ -26,10 +26,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (dataState != null) {
       if (context.mounted) {
         if (dataState is DataException) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(dataState.exceptionMessage!),
-            backgroundColor: Colors.red,
-          ));
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(dataState.exceptionMessage!),
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              margin: const EdgeInsets.symmetric(horizontal: 10)
+                  .copyWith(bottom: 10),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 2),
+            ),
+          );
         } else {
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -45,6 +54,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('SpotOffline'),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
