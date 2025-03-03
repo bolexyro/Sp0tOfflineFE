@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:spotoffline/features/library/data/models/image_model.dart';
 part 'album_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class AlbumModel {
   final String id;
   final String name;

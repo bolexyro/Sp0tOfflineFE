@@ -3,6 +3,7 @@ import 'package:spotoffline/core/auth/auth_interceptor.dart';
 import 'package:spotoffline/core/auth/token_manager.dart';
 import 'package:spotoffline/core/di/service_locator.dart';
 import 'package:spotoffline/core/network/api_endpoints.dart';
+import 'package:spotoffline/features/auth/domain/repository/auth_repository.dart';
 
 class DioClient {
   DioClient()
@@ -17,7 +18,10 @@ class DioClient {
             },
           ),
         ) {
-    dio.interceptors.add(AuthInterceptor(getIt<TokenManager>()));
+    dio.interceptors.add(AuthInterceptor(
+      getIt<TokenManager>(),
+      getIt<AuthRepository>(),
+    ));
   }
   final Dio dio;
 }

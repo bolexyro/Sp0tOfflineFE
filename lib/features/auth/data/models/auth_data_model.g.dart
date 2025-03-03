@@ -8,8 +8,12 @@ part of 'auth_data_model.dart';
 
 AuthDataModel _$AuthDataModelFromJson(Map<String, dynamic> json) =>
     AuthDataModel(
-      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
-      token: TokenModel.fromJson(json['token_data'] as Map<String, dynamic>),
+      user: json['user'] == null
+          ? null
+          : UserModel.fromJson(json['user'] as Map<String, dynamic>),
+      token: json['token_data'] == null
+          ? null
+          : TokenModel.fromJson(json['token_data'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AuthDataModelToJson(AuthDataModel instance) =>

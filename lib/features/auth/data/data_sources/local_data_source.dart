@@ -8,12 +8,18 @@ class LocalDataSource {
   final SharedPreferencesWithCache prefsWithCache;
 
   Future<void> saveAuthData(AuthDataModel authData) async {
-    await prefsWithCache.setString('name', authData.user.name);
-    await prefsWithCache.setStringList('images', authData.user.images);
-    await prefsWithCache.setString('email', authData.user.email);
-    await prefsWithCache.setString('id', authData.user.id);
-    await prefsWithCache.setString('accessToken', authData.token.accessToken);
-    await prefsWithCache.setString('refreshToken', authData.token.refreshToken);
+    if (authData.user != null) {
+      await prefsWithCache.setString('name', authData.user!.name);
+      await prefsWithCache.setStringList('images', authData.user!.images);
+      await prefsWithCache.setString('email', authData.user!.email);
+      await prefsWithCache.setString('id', authData.user!.id);
+    }
+    if (authData.token != null) {
+      await prefsWithCache.setString(
+          'accessToken', authData.token!.accessToken);
+      await prefsWithCache.setString(
+          'refreshToken', authData.token!.refreshToken);
+    }
   }
 
   AuthDataModel? getAuthData() {

@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'album_model.dart';
+part of 'playlist_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AlbumModel _$AlbumModelFromJson(Map<String, dynamic> json) => AlbumModel(
+PlaylistModel _$PlaylistModelFromJson(Map<String, dynamic> json) =>
+    PlaylistModel(
       id: json['id'] as String,
       name: json['name'] as String,
       images: (json['images'] as List<dynamic>)
@@ -14,7 +15,7 @@ AlbumModel _$AlbumModelFromJson(Map<String, dynamic> json) => AlbumModel(
           .toList(),
     );
 
-Map<String, dynamic> _$AlbumModelToJson(AlbumModel instance) =>
+Map<String, dynamic> _$PlaylistModelToJson(PlaylistModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,

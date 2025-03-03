@@ -3,6 +3,11 @@ class ApiEndpoints {
   static const baseUrl = 'https://$subDomain';
   static const login = '$baseUrl/login';
   static const likedSongs = '/liked-songs';
+  static const albums = '/albums';
+  static String albumTracks(String albumId) => '/albums/$albumId/tracks';
+  static const playlists = '/playlists';
+  static String playlistTracks(String playlistId) =>
+      '/playlists/$playlistId/tracks';
   static const refreshToken = '/auth/refresh-token';
   static const tokenWebsocket = 'wss://$subDomain/ws/token';
 }

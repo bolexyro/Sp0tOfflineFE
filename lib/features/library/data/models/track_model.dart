@@ -22,6 +22,7 @@ class TrackModel {
     required this.durationMs,
   });
 
-  factory TrackModel.fromJson(Map<String, dynamic> json) => _$TrackModelFromJson(json);
+  factory TrackModel.fromJson(Map<String, dynamic> json) =>
+      _$TrackModelFromJson(json);
   Map<String, dynamic> toJson() => _$TrackModelToJson(this);
 }

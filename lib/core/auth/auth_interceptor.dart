@@ -3,11 +3,16 @@ import 'package:spotoffline/core/auth/token_manager.dart';
 import 'package:spotoffline/core/di/service_locator.dart';
 import 'package:spotoffline/core/network/api_endpoints.dart';
 import 'package:spotoffline/core/network/dio_client.dart';
+import 'package:spotoffline/features/auth/domain/repository/auth_repository.dart';
 
 class AuthInterceptor extends Interceptor {
-  AuthInterceptor(this._authManager);
+  AuthInterceptor(
+    this._authManager,
+    this._authRepository,
+  );
 
   final TokenManager _authManager;
+  final AuthRepository _authRepository;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -26,12 +31,19 @@ class AuthInterceptor extends Interceptor {
     print("bolexyro nations ${err.response?.statusCode}");
     if (err.response?.statusCode == 401) {
       try {
-        final response = await refreshToken();
+        final response = await refreshTokens();
 
-        if (response.containsKey('access_token') &&
-            response.containsKey('refresh_token')) {
-          getIt<TokenManager>().accessToken = response["access_token"];
-          getIt<TokenManager>().refreshToken = response["refresh_token"];
+        if (response.containsKey('access_token')) {
+          final accessToken = response["access_token"];
+
+          var refreshToken =
+              response['refresh_token'] ?? getIt<TokenManager>().refreshToken;
+
+          getIt<TokenManager>().accessToken = accessToken;
+          getIt<TokenManager>().refreshToken = refreshToken;
+
+          await _authRepository.saveTokens(accessToken, refreshToken);
+
           final newToken = getIt<TokenManager>().accessToken;
           err.requestOptions.headers["Authorization"] = "Bearer $newToken";
 
@@ -49,7 +61,7 @@ class AuthInterceptor extends Interceptor {
     }
   }
 
-  Future<Map<String, dynamic>> refreshToken() async {
+  Future<Map<String, dynamic>> refreshTokens() async {
     final response = await getIt<DioClient>().dio.post(
         ApiEndpoints.refreshToken,
         data: {"refresh_token": getIt<TokenManager>().refreshToken});

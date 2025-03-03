@@ -33,7 +33,7 @@ class ProfileCircleAvatar extends ConsumerWidget {
         ],
         child: CircleAvatar(
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            child: Text(ref.read(authProvider)!.user.getInitials())),
+            child: Text(ref.read(authProvider)!.user!.getInitials())),
       ),
     );
   }

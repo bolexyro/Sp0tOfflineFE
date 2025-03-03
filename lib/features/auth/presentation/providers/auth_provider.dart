@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spotoffline/core/data_state.dart';
-import 'package:spotoffline/features/auth/data/repository/auth_repository.dart';
 import 'package:spotoffline/features/auth/domain/entity/auth_data.dart';
+import 'package:spotoffline/features/auth/domain/repository/auth_repository.dart';
 import 'package:spotoffline/features/auth/domain/usecases/listen_for_auth_success.dart';
 import 'package:spotoffline/features/auth/domain/usecases/load_auth_data.dart';
 import 'package:spotoffline/features/auth/domain/usecases/logout.dart';
@@ -43,7 +43,7 @@ class AuthNotifier extends StateNotifier<AuthData?> {
 
 final authProvider =
     StateNotifierProvider<AuthNotifier, AuthData?>((ref) => AuthNotifier(
-          ListenForAuthSuccess(getIt<AuthRepositoryImpl>()),
-          LoadAuthData(getIt<AuthRepositoryImpl>()),
-          Logout(getIt<AuthRepositoryImpl>()),
+          ListenForAuthSuccess(getIt<AuthRepository>()),
+          LoadAuthData(getIt<AuthRepository>()),
+          Logout(getIt<AuthRepository>()),
         ));

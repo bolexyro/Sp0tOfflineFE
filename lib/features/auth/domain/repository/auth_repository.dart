@@ -5,6 +5,5 @@ abstract class AuthRepository {
   Future<DataState<AuthData>> listenForAuthSuccess();
   DataState<AuthData> loadAuthData();
   Future<void> logout();
-  Future<void> refreshToken();
-  // Future<AuthData? >
+  Future<void> saveTokens(String accessToken, String refreshToken);
 }

@@ -1,6 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotoffline/features/library/presentation/screens/liked_songs_screen.dart';
+import 'package:spotoffline/features/auth/presentation/screens/login_screen.dart';
+import 'package:spotoffline/features/library/presentation/providers/library_provider.dart';
+import 'package:spotoffline/features/library/presentation/providers/library_state.dart';
+import 'package:spotoffline/features/library/presentation/widgets/gettings_things_ready_widget.dart';
 import 'package:spotoffline/features/library/presentation/widgets/playlist_card.dart';
 import 'package:spotoffline/core/widgets/profile_circle_avatar.dart';
 
@@ -14,27 +19,68 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Library'),
-        actions: const [
-          ProfileCircleAvatar(),
-          SizedBox(width: 20),
-        ],
-      ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        children: [
-          PlaylistCard(
-            text: "Liked Songs",
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const LikedSongsScreen(),
+    final libraryData = ref.watch(libraryProvider).libraryData;
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Your Library'),
+            actions: const [
+              ProfileCircleAvatar(),
+              SizedBox(width: 20),
+            ],
+          ),
+          body: libraryData == null
+              ? const Center()
+              : GridView.count(
+                  crossAxisCount: 2,
+                  children: [
+                    PlaylistCard(
+                      text: "Liked Songs",
+                      icon: Icons.favorite,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      ),
+                    ),
+                    for (final playlist in libraryData.playlists)
+                      PlaylistCard(
+                        backgroundImageUrl: playlist.images[1].url,
+                        text: playlist.name,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        ),
+                      ),
+                    for (final album in libraryData.albums)
+                      PlaylistCard(
+                        backgroundImageUrl: album.images[1].url,
+                        text: album.name,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+        ),
+        if (ref.read(libraryProvider).libraryAction != LibraryAction.completed)
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: Container(
+                color: Colors.black.withOpacity(0.2),
+                child: const Material(
+                  color: Colors.transparent,
+                  child: GettingsThingsReadyWidget(),
+                ),
               ),
             ),
           ),
-        ],
-      ),
+      ],
     );
   }
 }

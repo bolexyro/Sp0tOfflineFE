@@ -7,9 +7,9 @@ part 'auth_data_model.g.dart';
 class AuthDataModel {
   const AuthDataModel({required this.user, required this.token});
 
-  final UserModel user;
+  final UserModel? user;
   @JsonKey(name: 'token_data')
-  final TokenModel token;
+  final TokenModel? token;
 
   factory AuthDataModel.fromJson(Map<String, dynamic> json) =>
       _$AuthDataModelFromJson(json);

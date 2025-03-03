@@ -7,15 +7,17 @@ import 'package:spotoffline/features/auth/domain/entity/user.dart';
 import 'package:spotoffline/features/library/data/models/album_model.dart';
 import 'package:spotoffline/features/library/data/models/artist_model.dart';
 import 'package:spotoffline/features/library/data/models/image_model.dart';
+import 'package:spotoffline/features/library/data/models/playlist_model.dart';
 import 'package:spotoffline/features/library/data/models/track_model.dart';
 import 'package:spotoffline/features/library/domain/entity/album.dart';
 import 'package:spotoffline/features/library/domain/entity/artist.dart';
 import 'package:spotoffline/features/library/domain/entity/image.dart';
+import 'package:spotoffline/features/library/domain/entity/playlist.dart';
 import 'package:spotoffline/features/library/domain/entity/track.dart';
 
 extension AuthDataModelMapper on AuthDataModel {
   AuthData toEntity() =>
-      AuthData(user: user.toEntity(), token: token.toEntity());
+      AuthData(user: user?.toEntity(), token: token?.toEntity());
 }
 
 extension UserModelMapper on UserModel {
@@ -28,6 +30,10 @@ extension TokenModelMapper on TokenModel {
 
 extension AlbumModelMapper on AlbumModel {
   Album toEntity() => Album(
+      id: id, name: name, images: images.map((img) => img.toEntity()).toList());
+}
+extension PlaylistModelMapper on PlaylistModel {
+  Playlist toEntity() => Playlist(
       id: id, name: name, images: images.map((img) => img.toEntity()).toList());
 }
 

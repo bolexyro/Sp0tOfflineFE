@@ -17,4 +17,8 @@ class Track {
   final List<Artist> artists;
   final Album album;
   final int durationMs;
+
+  String get artistsString => artists.map((artist)=>artist.name).join(", ");
 }
+
+

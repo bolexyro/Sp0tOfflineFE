@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotoffline/features/library/domain/entity/track.dart';
+
 class TrackCard extends StatelessWidget {
   const TrackCard({super.key, required this.track});
 
@@ -7,17 +8,25 @@ class TrackCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Row(
-        children: [
-          Image.network(
-            track.album.images[0].url,
-            width: 50,
-            height: 50,
-          ),
-          Text(track.name)
-        ],
+    return ListTile(
+      leading: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+        child: Image.network(
+          track.album.images[0].url,
+          width: 50,
+          height: 50,
+        ),
+      ),
+      title: Text(
+        track.name,
+        maxLines: 1,
+        style: const TextStyle(overflow: TextOverflow.ellipsis),
+      ),
+      subtitle: Text(
+        "${track.artistsString} · ${track.album.name}",
+        maxLines: 1,
+        style: const TextStyle(overflow: TextOverflow.ellipsis),
       ),
     );
   }
