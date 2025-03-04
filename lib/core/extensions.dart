@@ -7,6 +7,7 @@ import 'package:spotoffline/features/auth/domain/entity/user.dart';
 import 'package:spotoffline/features/library/data/models/album_model.dart';
 import 'package:spotoffline/features/library/data/models/artist_model.dart';
 import 'package:spotoffline/features/library/data/models/image_model.dart';
+import 'package:spotoffline/features/library/data/models/library_data_model.dart';
 import 'package:spotoffline/features/library/data/models/playlist_model.dart';
 import 'package:spotoffline/features/library/data/models/track_model.dart';
 import 'package:spotoffline/features/library/domain/entity/album.dart';
@@ -14,6 +15,7 @@ import 'package:spotoffline/features/library/domain/entity/artist.dart';
 import 'package:spotoffline/features/library/domain/entity/image.dart';
 import 'package:spotoffline/features/library/domain/entity/playlist.dart';
 import 'package:spotoffline/features/library/domain/entity/track.dart';
+import 'package:spotoffline/features/library/presentation/providers/library_state.dart';
 
 extension AuthDataModelMapper on AuthDataModel {
   AuthData toEntity() =>
@@ -56,6 +58,15 @@ extension ArtistModelMapper on ArtistModel {
 
 extension ImageModelMapper on ImageModel {
   Image toEntity() => Image(url: url, height: height, width: width);
+}
+
+extension LibraryDataMapper on LibraryDataModel {
+  LibraryData toEntity() => LibraryData(
+        totalLikedSongs: totalLikedSongs,
+        albums: albums.map((albumModel) => albumModel.toEntity()).toList(),
+        playlists:
+            playlists.map((playlistModel) => playlistModel.toEntity()).toList(),
+      );
 }
 
 extension TrackModelMapper on TrackModel {

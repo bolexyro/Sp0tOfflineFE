@@ -93,12 +93,15 @@ class DatabaseSetup {
 
     batch.execute('''
     CREATE TABLE $imageTable (
-      url TEXT PRIMARY KEY,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      url TEXT,
       height INTEGER NOT NULL,
       width INTEGER NOT NULL,
       album_id TEXT REFERENCES album(id) ON DELETE SET NULL,
       playlist_id TEXT REFERENCES playlist(id) ON DELETE SET NULL,
-      CHECK (album_id IS NOT NULL OR playlist_id IS NOT NULL)
+      CHECK (album_id IS NOT NULL OR playlist_id IS NOT NULL),
+      UNIQUE (url, album_id), -- Unique constraint when playlist_id is NULL
+      UNIQUE (url, playlist_id) 
     )
   ''');
 

@@ -18,36 +18,60 @@ class LocalDataSource {
   }) async {
     final db = await _databaseSetup.database;
 
-    // Check if the image already exists
-    final existingImage = await db.query(
-      DatabaseSetup.imageTable,
-      where: 'url = ?',
-      whereArgs: [image.url],
-    );
+    if (albumId != null) {
+      final existingImage = await db.query(
+        DatabaseSetup.imageTable,
+        where: 'url = ? AND album_id = ?',
+        whereArgs: [image.url, albumId],
+      );
 
-    if (existingImage.isNotEmpty) {
-      await db.update(
-        DatabaseSetup.imageTable,
-        {
-          if (albumId != null) 'album_id': albumId,
-          if (playlistId != null) 'playlist_id': playlistId,
-        },
-        where: 'url = ?',
-        whereArgs: [image.url],
-      );
-    } else {
-      // The image doesn't exist, insert a new row
-      await db.insert(
-        DatabaseSetup.imageTable,
-        {
-          'url': image.url,
-          'height': image.height,
-          'width': image.width,
-          'album_id': albumId,
-          'playlist_id': playlistId,
-        },
-      );
+      if (existingImage.isEmpty) {
+        await db.insert(
+          DatabaseSetup.imageTable,
+          {
+            'url': image.url,
+            'height': image.height,
+            'width': image.width,
+            'album_id': albumId,
+            'playlist_id': playlistId,
+          },
+        );
+      }
     }
+    if (playlistId != null) { 
+      final existingImage = await db.query(
+        DatabaseSetup.imageTable,
+        where: 'url = ? AND playlist_id = ?',
+        whereArgs: [image.url, playlistId],
+      );
+      if (existingImage.isEmpty) {
+        await db.insert(
+          DatabaseSetup.imageTable,
+          {
+            'url': image.url,
+            'height': image.height,
+            'width': image.width,
+            'album_id': albumId,
+            'playlist_id': playlistId,
+          },
+        );
+      }
+    }
+
+    // if (existingImage.isNotEmpty) {
+    // } else {
+    //   // The image doesn't exist, insert a new row
+    //   await db.insert(
+    //     DatabaseSetup.imageTable,
+    //     {
+    //       'url': image.url,
+    //       'height': image.height,
+    //       'width': image.width,
+    //       'album_id': albumId,
+    //       'playlist_id': playlistId,
+    //     },
+    //   );
+    // }
   }
 
   Future<void> insertAlbum(AlbumModel album, bool isUserAlbum) async {
@@ -274,7 +298,7 @@ class LocalDataSource {
 
   Future<List<Map<String, dynamic>>> _fetchArtistsForTrack(
       String trackId) async {
-    final db = await DatabaseSetup().database; // Get the database instance
+    final db = await DatabaseSetup().database;
 
     final List<Map<String, dynamic>> result = await db.rawQuery(
       '''
@@ -329,29 +353,34 @@ class LocalDataSource {
     return result;
   }
 
+  Future<List<Map<String, dynamic>>> _getImagesForPlaylist(
+      String playlistId) async {
+    final db = await DatabaseSetup().database;
+
+    final List<Map<String, dynamic>> result = await db.query(
+      DatabaseSetup.imageTable,
+      where: 'playlist_id = ?',
+      whereArgs: [playlistId],
+    );
+    return result;
+  }
+
   Future<TrackModel> _getTrackDetails(Map<String, Object?> json) async {
     final mutableJson = Map.of(json);
     // get artists
     final artists = await _fetchArtistsForTrack(json['id'] as String);
     mutableJson['artists'] = artists;
+    // get album
+    final albumId = json['album_id'] as String;
+    final album = await _getAlbum(albumId);
+    final mutableAlbum = Map.of(album);
 
-    try {
-      // get album
-      final albumId = json['album_id'] as String;
-      final album = await _getAlbum(albumId);
-      final mutableAlbum = Map.of(album);
-
-      final albumArtists = await _getArtistsForAlbum(albumId);
-      mutableAlbum['artists'] = albumArtists;
-      final albumImages = await _getImagesForAlbum(albumId);
-      mutableAlbum['images'] = albumImages;
-      mutableJson['album'] = mutableAlbum;
-      return TrackModel.fromJson(mutableJson);
-    } catch (e, s) {
-      print(json);
-      print(s);
-      return TrackModel.fromJson(mutableJson);
-    }
+    final albumArtists = await _getArtistsForAlbum(albumId);
+    mutableAlbum['artists'] = albumArtists;
+    final albumImages = await _getImagesForAlbum(albumId);
+    mutableAlbum['images'] = albumImages;
+    mutableJson['album'] = mutableAlbum;
+    return TrackModel.fromJson(mutableJson);
   }
 
   Future<List<TrackModel>> getLikedSongs() async {
@@ -377,7 +406,15 @@ class LocalDataSource {
       whereArgs: [1],
     );
 
-    return albums.map((json) => AlbumModel.fromJson(json)).toList();
+    return Future.wait(albums.map((json) async {
+      final albumId = json['id'] as String;
+      final mutableJson = Map.of(json);
+      final albumArtists = await _getArtistsForAlbum(albumId);
+      mutableJson['artists'] = albumArtists;
+      final albumImages = await _getImagesForAlbum(albumId);
+      mutableJson['images'] = albumImages;
+      return AlbumModel.fromJson(mutableJson);
+    }).toList());
   }
 
   Future<List<PlaylistModel>> getPlaylists() async {
@@ -386,7 +423,13 @@ class LocalDataSource {
       DatabaseSetup.playlistTable,
     );
 
-    return playlists.map((json) => PlaylistModel.fromJson(json)).toList();
+    return Future.wait(playlists.map((json) async {
+      final playlistId = json['id'] as String;
+      final mutableJson = Map.of(json);
+      final playlistImages = await _getImagesForPlaylist(playlistId);
+      mutableJson['images'] = playlistImages;
+      return PlaylistModel.fromJson(mutableJson);
+    }).toList());
   }
 
   Future<List<TrackModel>> getAlbumTracks(String albumId) async {

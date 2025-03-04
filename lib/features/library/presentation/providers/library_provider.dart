@@ -31,7 +31,10 @@ class LibraryNotifier extends StateNotifier<LibraryState> {
 
   Future<void> getLibrary() async {
     state = LibraryState(
-        isLoading: true, libraryAction: LibraryAction.idle, libraryData: null);
+      isLoading: true,
+      libraryAction: LibraryAction.idle,
+      libraryData: null,
+    );
     _getDownloadProgressUseCase().listen((currentLibraryState) {
       state = currentLibraryState;
     });

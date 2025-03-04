@@ -22,6 +22,24 @@ class LibraryRepositoryImpl implements LibraryRepository {
   @override
   Future<void> getLibrary() async {
     _downloadProgressController.add(LibraryState(
+      isOffline: true,
+      isLoading: true,
+      libraryAction: LibraryAction.completed,
+    ));
+    final libraryData = await _localDataSource.getLibrary();
+    if (libraryData.albums.isNotEmpty ||
+        libraryData.playlists.isNotEmpty ||
+        libraryData.totalLikedSongs != 0) {
+      _downloadProgressController.add(LibraryState(
+        isOffline: true,
+        isLoading: true,
+        libraryAction: LibraryAction.completed,
+        libraryData: libraryData.toEntity(),
+      ));
+      return;
+    }
+
+    _downloadProgressController.add(LibraryState(
         isLoading: true, libraryAction: LibraryAction.fetchingLikedSongs));
 
     final getLikedSongsDataState = await _remoteDataSource.getLikedSongs();

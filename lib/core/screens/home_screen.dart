@@ -20,7 +20,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final libraryData = ref.watch(libraryProvider).libraryData;
+    final libraryState = ref.watch(libraryProvider);
     return Stack(
       children: [
         Scaffold(
@@ -37,26 +37,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               SizedBox(width: 20),
             ],
           ),
-          body: libraryData == null
+          body: libraryState.libraryData == null && !libraryState.isOffline
               ? const Center()
-              : SingleChildScrollView(
-                  child: Wrap(
-                    children: [
-                      if (libraryData.totalLikedSongs != null)
-                        const LikedSongsCard(),
-                      for (final playlist in libraryData.playlists)
-                        PlaylistCard(
-                          playlist: playlist,
-                        ),
-                      for (final album in libraryData.albums)
-                        AlbumCard(
-                          album: album,
-                        ),
-                    ],
-                  ),
-                ),
+              : libraryState.libraryData == null && libraryState.isOffline
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SingleChildScrollView(
+                      child: Wrap(
+                        children: [
+                          if (libraryState.libraryData!.totalLikedSongs != null)
+                            const LikedSongsCard(),
+                          for (final playlist
+                              in libraryState.libraryData!.playlists)
+                            PlaylistCard(
+                              playlist: playlist,
+                            ),
+                          for (final album in libraryState.libraryData!.albums)
+                            AlbumCard(
+                              album: album,
+                            ),
+                        ],
+                      ),
+                    ),
         ),
-        if (ref.read(libraryProvider).libraryAction != LibraryAction.completed)
+        if (libraryState.libraryAction != LibraryAction.completed &&
+            !libraryState.isOffline)
           Positioned.fill(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),

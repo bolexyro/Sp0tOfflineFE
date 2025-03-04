@@ -5,9 +5,11 @@ class LibraryState {
   LibraryState({
     required this.isLoading,
     required this.libraryAction,
+    this.isOffline = false,
     this.libraryData,
   });
   final bool isLoading;
+  final bool isOffline;
   final LibraryAction libraryAction;
   final LibraryData? libraryData;
 }
