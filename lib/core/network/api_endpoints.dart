@@ -9,5 +9,5 @@ class ApiEndpoints {
   static String playlistTracks(String playlistId) =>
       '/playlists/$playlistId/tracks';
   static const refreshToken = '/auth/refresh-token';
-  static const tokenWebsocket = 'wss://$subDomain/ws/token';
+  static String tokenWebsocket(String id) => 'wss://$subDomain/ws/token/$id';
 }
