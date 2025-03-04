@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotoffline/features/library/domain/entity/playlist.dart';
 import 'package:spotoffline/features/library/presentation/providers/library_provider.dart';
 import 'package:spotoffline/features/library/presentation/screens/tracks_screen.dart';
 
-class PlaylistCard extends ConsumerWidget {
-  const PlaylistCard({
-    super.key,
-    required this.playlist,
-  });
-
-  final Playlist playlist;
+class LikedSongsCard extends ConsumerWidget {
+  const LikedSongsCard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { 
+  Widget build(BuildContext context, WidgetRef ref) {
     const double padding = 8;
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
@@ -22,10 +16,8 @@ class PlaylistCard extends ConsumerWidget {
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => TracksScreen(
-                getTracks: ref
-                    .read(libraryProvider.notifier)
-                    .getPlaylistTracks(playlist.id),
-                screenTitle: playlist.name,
+                getTracks: ref.read(libraryProvider.notifier).getLikedSongs(),
+                screenTitle: 'Liked Songs',
               ),
             ),
           ),
@@ -37,27 +29,37 @@ class PlaylistCard extends ConsumerWidget {
                 SizedBox(
                   height: constraints.maxWidth / 2 - 2 * padding,
                   child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(playlist.images[1].url),
-                          fit: BoxFit.cover,
-                        ),
-                      )),
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color.fromARGB(255, 94, 23, 209),
+                          Color.fromARGB(255, 192, 165, 236),
+                        ],
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.favorite,
+                      size: 60,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  playlist.name,
+                const Text(
+                  'Liked Songs',
                   maxLines: 2,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Text(
-                  'Playlist · ${playlist.ownerName}',
-                  style: const TextStyle(color: Colors.grey),
+                const Text(
+                  'Playlist',
+                  style: TextStyle(color: Colors.grey),
                 )
               ],
             ),

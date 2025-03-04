@@ -2,10 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spotoffline/features/auth/presentation/screens/login_screen.dart';
 import 'package:spotoffline/features/library/presentation/providers/library_provider.dart';
 import 'package:spotoffline/features/library/presentation/providers/library_state.dart';
+import 'package:spotoffline/features/library/presentation/widgets/album_card.dart';
 import 'package:spotoffline/features/library/presentation/widgets/gettings_things_ready_widget.dart';
+import 'package:spotoffline/features/library/presentation/widgets/liked_songs_card.dart';
 import 'package:spotoffline/features/library/presentation/widgets/playlist_card.dart';
 import 'package:spotoffline/core/widgets/profile_circle_avatar.dart';
 
@@ -24,7 +25,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text('Your Library'),
+            title: const Text(
+              'Your Library',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+            ),
             actions: const [
               ProfileCircleAvatar(),
               SizedBox(width: 20),
@@ -32,39 +39,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           body: libraryData == null
               ? const Center()
-              : GridView.count(
-                  crossAxisCount: 2,
-                  children: [
-                    PlaylistCard(
-                      text: "Liked Songs",
-                      icon: Icons.favorite,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
+              : SingleChildScrollView(
+                  child: Wrap(
+                    children: [
+                      if (libraryData.totalLikedSongs != null)
+                        const LikedSongsCard(),
+                      for (final playlist in libraryData.playlists)
+                        PlaylistCard(
+                          playlist: playlist,
                         ),
-                      ),
-                    ),
-                    for (final playlist in libraryData.playlists)
-                      PlaylistCard(
-                        backgroundImageUrl: playlist.images[1].url,
-                        text: playlist.name,
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
+                      for (final album in libraryData.albums)
+                        AlbumCard(
+                          album: album,
                         ),
-                      ),
-                    for (final album in libraryData.albums)
-                      PlaylistCard(
-                        backgroundImageUrl: album.images[1].url,
-                        text: album.name,
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                        ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
         ),
         if (ref.read(libraryProvider).libraryAction != LibraryAction.completed)

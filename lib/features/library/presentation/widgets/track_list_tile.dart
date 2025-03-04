@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spotoffline/features/library/domain/entity/track.dart';
 
-class TrackCard extends StatelessWidget {
-  const TrackCard({super.key, required this.track});
+class TrackListTile extends StatelessWidget {
+  const TrackListTile({super.key, required this.track});
 
   final Track track;
 

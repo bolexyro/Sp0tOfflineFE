@@ -13,6 +13,7 @@ class DatabaseSetup {
   static const artistTable = 'Artist';
   static const imageTable = 'Image';
   static const trackArtistTable = 'TrackArtist';
+  static const albumArtistTable = 'AlbumArtist';
   static const playlistTable = 'Playlist';
 
   Future<sql.Database> get database async {
@@ -62,9 +63,9 @@ class DatabaseSetup {
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       preview_url TEXT,
-      is_liked BOOLEAN NOT NULL DEFAULT 0,
       album_id TEXT REFERENCES $albumTable(id) ON DELETE CASCADE,
       playlist_id TEXT REFERENCES $playlistTable(id) ON DELETE CASCADE,
+      is_liked BOOLEAN NOT NULL DEFAULT 0,
       duration_ms INTEGER NOT NULL
     )
   ''');
@@ -73,6 +74,9 @@ class DatabaseSetup {
     CREATE TABLE $albumTable (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
+      album_type TEXT NOT NULL,
+      total_tracks INTEGER NOT NULL,
+      release_date TEXT NOT NULL,
       is_user_album BOOLEAN NOT NULL DEFAULT 0
     )
   ''');
@@ -80,7 +84,10 @@ class DatabaseSetup {
     batch.execute('''
     CREATE TABLE $playlistTable (
       id TEXT PRIMARY KEY,
-      name TEXT NOT NULL
+      name TEXT NOT NULL,
+      description TEXT,
+      owner_name TEXT NOT NULL,
+      total_tracks INTEGER NOT NULL
     )
   ''');
 
@@ -105,8 +112,16 @@ class DatabaseSetup {
     batch.execute('''
     CREATE TABLE $trackArtistTable (
       track_id TEXT NOT NULL REFERENCES $trackTable(id) ON DELETE CASCADE,
-      artist_id TEXT NOT NUL REFERENCES $artistTable(id) ON DELETE CASCADE,
+      artist_id TEXT NOT NULL REFERENCES $artistTable(id) ON DELETE CASCADE,
       PRIMARY KEY (track_id, artist_id)
+    )
+  ''');
+
+    batch.execute('''
+    CREATE TABLE $albumArtistTable (
+      album_id TEXT NOT NULL REFERENCES $albumTable(id) ON DELETE CASCADE,
+      artist_id TEXT NOT NULL REFERENCES $artistTable(id) ON DELETE CASCADE,
+      PRIMARY KEY (album_id, artist_id)
     )
   ''');
 

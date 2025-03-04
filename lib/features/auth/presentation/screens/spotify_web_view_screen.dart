@@ -13,7 +13,6 @@ class SpotifyWebViewScreen extends ConsumerStatefulWidget {
 }
 
 class _SpotifyWebViewScreenState extends ConsumerState<SpotifyWebViewScreen> {
-
   double loadProgress = 0;
   bool isLoading = false;
 
@@ -22,14 +21,19 @@ class _SpotifyWebViewScreenState extends ConsumerState<SpotifyWebViewScreen> {
     ..setNavigationDelegate(
       NavigationDelegate(
         onProgress: (int progress) {
-          setState(() => loadProgress = progress / 100);
-          // Update loading bar.
+          if (mounted) {
+            setState(() => loadProgress = progress / 100);
+          }
         },
         onPageStarted: (String url) {
-          setState(() => isLoading = true);
+          if (mounted) {
+            setState(() => isLoading = true);
+          }
         },
         onPageFinished: (String url) {
-          setState(() => isLoading = false);
+          if (mounted) {
+            setState(() => isLoading = false);
+          }
         },
         onHttpError: (HttpResponseError error) {},
         onWebResourceError: (WebResourceError error) {},

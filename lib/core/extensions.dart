@@ -30,11 +30,24 @@ extension TokenModelMapper on TokenModel {
 
 extension AlbumModelMapper on AlbumModel {
   Album toEntity() => Album(
-      id: id, name: name, images: images.map((img) => img.toEntity()).toList());
+        id: id,
+        name: name,
+        type: type,
+        totalTracks: totalTracks,
+        releaseDate: releaseDate,
+        artists: artists.map((artist) => artist.toEntity()).toList(),
+        images: images.map((img) => img.toEntity()).toList(),
+      );
 }
+
 extension PlaylistModelMapper on PlaylistModel {
   Playlist toEntity() => Playlist(
-      id: id, name: name, images: images.map((img) => img.toEntity()).toList());
+        id: id,
+        name: name,
+        description: description,
+        ownerName: ownerName,
+        images: images.map((img) => img.toEntity()).toList(),
+      );
 }
 
 extension ArtistModelMapper on ArtistModel {

@@ -1,6 +1,5 @@
 import 'package:spotoffline/features/library/domain/entity/album.dart';
 import 'package:spotoffline/features/library/domain/entity/playlist.dart';
-import 'package:spotoffline/features/library/domain/entity/track.dart';
 
 class LibraryState {
   LibraryState({
@@ -32,11 +31,12 @@ enum LibraryAction {
 
 class LibraryData {
   LibraryData({
-    required this.likedSongs,
+    required this.totalLikedSongs,
     required this.albums,
     required this.playlists,
   });
-  final List<Track> likedSongs;
+  // if this is non null then there are likedsongs
+  final int? totalLikedSongs;
   final List<Album> albums;
   final List<Playlist> playlists;
 }
