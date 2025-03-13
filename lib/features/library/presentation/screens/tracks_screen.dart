@@ -8,11 +8,12 @@ class TracksScreen extends ConsumerStatefulWidget {
     super.key,
     required this.getTracks,
     required this.screenTitle,
+    required this.sourceType,
   });
 
   final Future<List<Track>> getTracks;
   final String screenTitle;
-
+  final String sourceType;
   @override
   ConsumerState<TracksScreen> createState() => _LikedSongsScreenState();
 }
@@ -34,7 +35,7 @@ class _LikedSongsScreenState extends ConsumerState<TracksScreen> {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.black,
-                    Color.fromARGB(255, 31, 110, 48),
+                    Color.fromARGB(183, 11, 87, 27),
                   ],
                 ),
               ),
@@ -79,8 +80,11 @@ class _LikedSongsScreenState extends ConsumerState<TracksScreen> {
                     );
                   }
                   return ListView.builder(
-                    itemBuilder: (context, index) =>
-                        TrackListTile(track: likedSongs[index]),
+                    itemBuilder: (context, index) => TrackListTile(
+                      track: likedSongs[index],
+                      sourceType: widget.sourceType,
+                      sourceName: widget.screenTitle,
+                    ),
                     itemCount: likedSongs.length,
                   );
                 },

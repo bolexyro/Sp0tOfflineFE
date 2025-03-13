@@ -15,7 +15,7 @@ class LikedSongsCard extends ConsumerWidget {
         child: GestureDetector(
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => TracksScreen(
+              builder: (context) => TracksScreen(sourceType: "YOUR LIBRARY",
                 getTracks: ref.read(libraryProvider.notifier).getLikedSongs(),
                 screenTitle: 'Liked Songs',
               ),

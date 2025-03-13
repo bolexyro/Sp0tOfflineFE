@@ -22,6 +22,7 @@ class AlbumCard extends ConsumerWidget {
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => TracksScreen(
+                sourceType: "ALBUM",
                 getTracks:
                     ref.read(libraryProvider.notifier).getAlbumTracks(album.id),
                 screenTitle: album.name,

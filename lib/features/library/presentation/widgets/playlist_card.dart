@@ -22,6 +22,7 @@ class PlaylistCard extends ConsumerWidget {
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => TracksScreen(
+                sourceType: "PLAYLIST",
                 getTracks: ref
                     .read(libraryProvider.notifier)
                     .getPlaylistTracks(playlist.id),

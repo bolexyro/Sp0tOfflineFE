@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:spotoffline/core/utils.dart';
 import 'package:spotoffline/features/library/domain/entity/track.dart';
+import 'package:spotoffline/features/library/presentation/screens/track_screen.dart';
 
 class TrackListTile extends StatelessWidget {
-  const TrackListTile({super.key, required this.track});
+  const TrackListTile({
+    super.key,
+    required this.track,
+    required this.sourceType,
+    required this.sourceName,
+  });
 
   final Track track;
+  final String sourceType;
+  final String sourceName;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +36,14 @@ class TrackListTile extends StatelessWidget {
         "${track.artistsString} · ${track.album.name}",
         maxLines: 1,
         style: const TextStyle(overflow: TextOverflow.ellipsis),
+      ),
+      onTap: () => slideInNavigate(
+        context,
+        TrackScreen(
+          track: track,
+          sourceType: sourceType,
+          sourceName: sourceName,
+        ),
       ),
     );
   }
